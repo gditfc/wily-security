@@ -1,0 +1,84 @@
+package io.csra.wily.security.config.impl;
+
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.proc.JWSKeySelector;
+import com.nimbusds.jose.proc.JWSVerificationKeySelector;
+import com.nimbusds.jose.util.DefaultResourceRetriever;
+import com.nimbusds.jose.util.ResourceRetriever;
+import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
+import com.nimbusds.jwt.proc.DefaultJWTProcessor;
+import io.csra.wily.security.filter.impl.CognitoAutoLoginFilter;
+import io.csra.wily.security.config.SecurityConfiguration;
+import io.csra.wily.security.filter.AutoLoginFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static com.nimbusds.jose.JWSAlgorithm.RS256;
+
+public class CognitoSecurityConfiguration extends SecurityConfiguration {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdmSecurityConfiguration.class);
+
+    @Autowired
+    private Environment environment;
+
+    @Override
+    protected AutoLoginFilter getAutoLoginFilter() {
+        if (this.autoLoginFilter == null) {
+            try {
+                this.autoLoginFilter = new CognitoAutoLoginFilter(super.authenticationManagerBean(),
+                                                                    configurableJWTProcessor(),
+                                                                    this.environment);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
+
+        return this.autoLoginFilter;
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers(HttpMethod.OPTIONS,
+                "/api/**");
+
+        web.ignoring().antMatchers(
+                "/api/public/**",
+                "/swagger-ui.html",
+                "/webjars/springfox-swagger-ui/**",
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/v2/**",
+                "/actuator",
+                "/actuator/**");
+    }
+
+    @Bean
+    public ConfigurableJWTProcessor configurableJWTProcessor() throws MalformedURLException {
+        ResourceRetriever resourceRetriever = new DefaultResourceRetriever(
+                new Integer(environment.getRequiredProperty("security.cognito.timeout.connection")),
+                new Integer(environment.getRequiredProperty("security.cognito.timeout.read")));
+
+        URL jwkSetURL = new URL(String.format(
+                        environment.getRequiredProperty("security.cognito.identity_pool_url") +
+                        environment.getRequiredProperty("security.cognito.jwks_suffix"),
+                        environment.getRequiredProperty("security.cognito.region"),
+                        environment.getRequiredProperty("security.cognito.userpool")));
+
+        JWKSource keySource = new RemoteJWKSet(jwkSetURL, resourceRetriever);
+        ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor();
+        JWSKeySelector keySelector = new JWSVerificationKeySelector(RS256, keySource);
+        jwtProcessor.setJWSKeySelector(keySelector);
+
+        return jwtProcessor;
+    }
+}
