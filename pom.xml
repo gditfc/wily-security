@@ -4,7 +4,7 @@
 
 	<groupId>io.csra.wily</groupId>
 	<artifactId>security</artifactId>
-	<version>2.1.1</version>
+	<version>2.1.2</version>
 	<packaging>jar</packaging>
 
 	<name>wily-security</name>
@@ -37,12 +37,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<wily-exceptions.version>2.1.2</wily-exceptions.version>
 	</properties>
 
 	<parent>
 		<groupId>io.csra.wily</groupId>
 		<artifactId>dependencies</artifactId>
-		<version>2.1.1</version>
+		<version>2.1.2</version>
 	</parent>
 
 	<dependencies>
@@ -64,7 +66,7 @@
 		<dependency>
 			<groupId>io.csra.wily</groupId>
 			<artifactId>exceptions</artifactId>
-			<version>2.1.1</version>
+			<version>${wily-exceptions.version}</version>
 		</dependency>
 
 		<dependency>
