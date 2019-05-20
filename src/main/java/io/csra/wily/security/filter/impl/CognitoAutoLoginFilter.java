@@ -88,7 +88,9 @@ public class CognitoAutoLoginFilter extends AutoLoginFilter {
                 grantedAuthorities = convertList(groups, group -> new SimpleGrantedAuthority(ROLE_PREFIX + group.toUpperCase()));
             }
 
-            return new PreAuthenticatedAuthenticationToken(username, DUMMY_PASSWORD, grantedAuthorities);
+            PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(username, DUMMY_PASSWORD, grantedAuthorities);
+            token.setDetails(idToken);
+            return token;
         }
 
         return null;
