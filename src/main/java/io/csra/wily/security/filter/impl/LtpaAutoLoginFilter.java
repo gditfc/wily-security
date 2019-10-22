@@ -68,10 +68,10 @@ public class LtpaAutoLoginFilter extends AutoLoginFilter {
 	/**
 	 * Extracts the role from the bindString which is embedded by the IDM in the header.
 	 * 
-	 * @param request
-	 * @return
+	 * @param request - the htto request
+	 * @return - the roles
 	 * 
-	 * @throws PreAuthenticatedCredentialsNotFoundException
+	 * @throws PreAuthenticatedCredentialsNotFoundException - thrown when credentials not found
 	 */
 	protected List<GrantedAuthority> getRoles(HttpServletRequest request) {
 		List<GrantedAuthority> authorities = new ArrayList<>();

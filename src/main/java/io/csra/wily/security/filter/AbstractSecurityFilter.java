@@ -39,10 +39,10 @@ public abstract class AbstractSecurityFilter extends GenericFilterBean {
 	/**
 	 * Error handler for this filter. All exceptions should be sent here with the appropriate HTTP Status Code and message.
 	 * 
-	 * @param response
-	 * @param statusCode
-	 * @param errorMessage
-	 * @throws IOException
+	 * @param response - the http response
+	 * @param statusCode - the status code
+	 * @param errorMessage - the error message
+	 * @throws IOException - if an input or output exception occurred
 	 */
 	protected void handleException(HttpServletResponse response, int statusCode, String errorMessage) throws IOException {
 		response.setStatus(statusCode);
@@ -52,8 +52,7 @@ public abstract class AbstractSecurityFilter extends GenericFilterBean {
 	/**
 	 * Returns the principal. If none is found, an UnauthorizedException is escalated.
 	 * 
-	 * @return
-	 * @throws AccessDeniedException
+	 * @return - the authentication
 	 */
 	protected Authentication getPrincipal() {
 		Authentication principal = SecurityContextHolder.getContext().getAuthentication();

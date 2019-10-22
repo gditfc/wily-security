@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,7 +24,7 @@ import static com.nimbusds.jose.JWSAlgorithm.RS256;
 
 public class CognitoSecurityConfiguration extends SecurityConfiguration {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IdmSecurityConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CognitoSecurityConfiguration.class);
 
     @Autowired
     private Environment environment;
@@ -44,22 +42,6 @@ public class CognitoSecurityConfiguration extends SecurityConfiguration {
         }
 
         return this.autoLoginFilter;
-    }
-
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(HttpMethod.OPTIONS,
-                "/api/**");
-
-        web.ignoring().antMatchers(
-                "/api/public/**",
-                "/swagger-ui.html",
-                "/webjars/springfox-swagger-ui/**",
-                "/swagger-resources",
-                "/swagger-resources/**",
-                "/v2/**",
-                "/actuator",
-                "/actuator/**");
     }
 
     @Bean

@@ -84,8 +84,8 @@ public class IdmAutoLoginFilter extends AutoLoginFilter {
 	/**
 	 * The true implementor of getRole. Separated to a distinct method to allow overriding by sub-classes.
 	 * 
-	 * @param request
-	 * @return
+	 * @param request - the http request
+	 * @return - the role
 	 */
 	protected String doGetRole(HttpServletRequest request) {
 		String role = request.getHeader(ROLE_HEADER);
