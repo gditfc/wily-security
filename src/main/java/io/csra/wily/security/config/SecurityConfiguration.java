@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
@@ -17,12 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Spring Security Configuration - ensures that all APIs exposed at /api/* are protected. The spring security filter
@@ -32,31 +25,12 @@ import javax.servlet.http.HttpServletRequest;
  * @author Nick DiMola
  * 
  */
-public abstract class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public abstract class SecurityConfiguration extends CorsSecurityConfiguration {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-	@Autowired
-	private CorsConfigurationProperties corsConfigurationProperties;
-
 	protected AutoLoginFilter autoLoginFilter;
-
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration corsConfig = new CorsConfiguration();
-		corsConfig.setAllowCredentials(true);
-		corsConfig.setAllowedOrigins(corsConfigurationProperties.getOrigin());
-		corsConfig.setAllowedMethods(corsConfigurationProperties.getMethods());
-		corsConfig.setAllowedHeaders(corsConfigurationProperties.getAllowheaders());
-		corsConfig.setExposedHeaders(corsConfigurationProperties.getExposeheaders());
-		corsConfig.setMaxAge(corsConfigurationProperties.getMaxage());
-
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", corsConfig);
-
-		return source;
-	}
 
 	@Bean
 	public MethodInvokingBean methodInvokingFactoryBean() {
@@ -80,7 +54,7 @@ public abstract class SecurityConfiguration extends WebSecurityConfigurerAdapter
 						"/v2/**",
 						"/actuator",
 						"/actuator/**"
-				).anonymous()
+				).permitAll()
 				.antMatchers("/api/**").fullyAuthenticated();
 
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
