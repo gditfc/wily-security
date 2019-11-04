@@ -2,13 +2,13 @@ package io.csra.wily.security.config;
 
 import io.csra.wily.security.filter.AutoLoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.MethodInvokingBean;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
@@ -25,7 +25,7 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
  * @author Nick DiMola
  * 
  */
-public abstract class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public abstract class SecurityConfiguration extends CorsSecurityConfiguration {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -33,22 +33,35 @@ public abstract class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	protected AutoLoginFilter autoLoginFilter;
 
 	@Bean
-	public MethodInvokingFactoryBean methodInvokingFactoryBean() {
-		MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
-		methodInvokingFactoryBean.setTargetClass(SecurityContextHolder.class);
-		methodInvokingFactoryBean.setTargetMethod("setStrategyName");
-		methodInvokingFactoryBean.setArguments(new Object[] { SecurityContextHolder.MODE_INHERITABLETHREADLOCAL });
-		return methodInvokingFactoryBean;
+	public MethodInvokingBean methodInvokingFactoryBean() {
+		MethodInvokingBean methodInvokingBean = new MethodInvokingFactoryBean();
+		methodInvokingBean.setTargetClass(SecurityContextHolder.class);
+		methodInvokingBean.setTargetMethod("setStrategyName");
+		methodInvokingBean.setArguments(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+		return methodInvokingBean;
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authenticationProvider(authenticationProvider()).authorizeRequests().antMatchers(getApiPath()).fullyAuthenticated();
+
+		http.authenticationProvider(authenticationProvider()).authorizeRequests()
+				.antMatchers(
+						"/api/public/**",
+						"/swagger-ui.html",
+						"/webjars/springfox-swagger-ui/**",
+						"/swagger-resources/**",
+						"/swagger-resources",
+						"/v2/**",
+						"/actuator",
+						"/actuator/**"
+				).permitAll()
+				.antMatchers("/api/**").fullyAuthenticated();
 
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		http.anonymous().disable();
 		http.csrf().disable();
+
+		http.cors();
 
 		http.addFilterAfter(getAutoLoginFilter(), SecurityContextPersistenceFilter.class);
 		configureFilterChain(http);
