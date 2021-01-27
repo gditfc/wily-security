@@ -2,6 +2,7 @@ package io.csra.wily.security.config.impl;
 
 import com.okta.spring.boot.oauth.Okta;
 import io.csra.wily.security.config.CorsSecurityConfiguration;
+import io.csra.wily.security.constants.AntMatchers;
 import io.csra.wily.security.service.SecurityService;
 import io.csra.wily.security.service.impl.SecurityServiceImpl;
 import org.springframework.beans.factory.config.MethodInvokingBean;
@@ -27,16 +28,11 @@ public class OktaSecurityConfiguration extends CorsSecurityConfiguration {
 
         http.authorizeRequests()
                 .antMatchers(
-                        "/api/public/**",
-                        "/swagger-ui.html",
-                        "/webjars/springfox-swagger-ui/**",
-                        "/swagger-resources/**",
-                        "/swagger-resources",
-                        "/v2/**",
-                        "/actuator",
-                        "/actuator/**"
+                    AntMatchers.PERMITTED_URLS
                 ).permitAll()
-                .antMatchers("/api/**").fullyAuthenticated()
+                .antMatchers(
+                    AntMatchers.AUTHENTICATED_URLS
+                ).fullyAuthenticated()
                 .and()
                 .oauth2ResourceServer().jwt();
 

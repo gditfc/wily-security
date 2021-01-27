@@ -1,5 +1,6 @@
 package io.csra.wily.security.config;
 
+import io.csra.wily.security.constants.AntMatchers;
 import io.csra.wily.security.filter.AutoLoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.MethodInvokingBean;
@@ -46,16 +47,11 @@ public abstract class SecurityConfiguration extends CorsSecurityConfiguration {
 
 		http.authenticationProvider(authenticationProvider()).authorizeRequests()
 				.antMatchers(
-						"/api/public/**",
-						"/swagger-ui.html",
-						"/webjars/springfox-swagger-ui/**",
-						"/swagger-resources/**",
-						"/swagger-resources",
-						"/v2/**",
-						"/actuator",
-						"/actuator/**"
+					AntMatchers.PERMITTED_URLS
 				).permitAll()
-				.antMatchers("/api/**").fullyAuthenticated();
+				.antMatchers(
+					AntMatchers.AUTHENTICATED_URLS
+				).fullyAuthenticated();
 
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

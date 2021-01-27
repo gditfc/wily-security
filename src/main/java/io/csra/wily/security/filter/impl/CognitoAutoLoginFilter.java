@@ -31,8 +31,8 @@ public class CognitoAutoLoginFilter extends AutoLoginFilter {
     private static final String DUMMY_PASSWORD = "password";
     private static final String ROLE_PREFIX = "ROLE_";
 
-    private ConfigurableJWTProcessor configurableJWTProcessor;
-    private Environment environment;
+    private final ConfigurableJWTProcessor configurableJWTProcessor;
+    private final Environment environment;
 
     public CognitoAutoLoginFilter(AuthenticationManager authenticationManager, ConfigurableJWTProcessor configurableJWTProcessor, Environment environment) {
         super.setAuthenticationManager(authenticationManager);
