@@ -1,6 +1,7 @@
 package io.csra.wily.security.config.impl;
 
 import io.csra.wily.security.config.CorsSecurityConfiguration;
+import io.csra.wily.security.constants.AntMatchers;
 import io.csra.wily.security.service.SecurityService;
 import io.csra.wily.security.service.impl.SecurityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +42,10 @@ public class Auth0SecurityConfiguration extends CorsSecurityConfiguration {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(
-                        "/api/public/**",
-                        "/swagger-ui.html",
-                        "/webjars/springfox-swagger-ui/**",
-                        "/swagger-resources/**",
-                        "/swagger-resources",
-                        "/v2/**",
-                        "/actuator",
-                        "/actuator/**"
+                        AntMatchers.PERMITTED_URLS
                 )
                 .permitAll()
-                .antMatchers("/api/**")
+                .antMatchers(AntMatchers.AUTHENTICATED_URLS)
                 .fullyAuthenticated()
                 .and()
                 .oauth2ResourceServer()
