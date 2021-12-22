@@ -47,8 +47,8 @@ public class CognitoSecurityConfiguration extends SecurityConfiguration {
     @Bean
     public ConfigurableJWTProcessor configurableJWTProcessor() throws MalformedURLException {
         ResourceRetriever resourceRetriever = new DefaultResourceRetriever(
-                new Integer(environment.getRequiredProperty("security.cognito.timeout.connection")),
-                new Integer(environment.getRequiredProperty("security.cognito.timeout.read")));
+                Integer.parseInt(environment.getRequiredProperty("security.cognito.timeout.connection")),
+                Integer.parseInt(environment.getRequiredProperty("security.cognito.timeout.read")));
 
         URL jwkSetURL = new URL(String.format(
                         environment.getRequiredProperty("security.cognito.identity_pool_url") +
