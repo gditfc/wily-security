@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@ConfigurationProperties(prefix="access.control")
+@ConfigurationProperties(prefix = "access.control")
 public class CorsConfigurationProperties {
 
     private List<String> origin = null;

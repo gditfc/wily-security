@@ -12,23 +12,22 @@ import org.slf4j.LoggerFactory;
  * so that users are properly identified by the application.
  *
  * @author ndimola
- *
  */
 public class PassThroughSecurityConfiguration extends SecurityConfiguration {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PassThroughSecurityConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PassThroughSecurityConfiguration.class);
 
-	@Override
-	protected AutoLoginFilter getAutoLoginFilter() {
-		if (this.autoLoginFilter == null) {
-			try {
-				this.autoLoginFilter = new PassThroughSecurityFilter(super.authenticationManagerBean());
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-		}
+    @Override
+    protected AutoLoginFilter getAutoLoginFilter() {
+        if (this.autoLoginFilter == null) {
+            try {
+                this.autoLoginFilter = new PassThroughSecurityFilter(super.authenticationManagerBean());
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
 
-		return this.autoLoginFilter;
-	}
+        return this.autoLoginFilter;
+    }
 
 }

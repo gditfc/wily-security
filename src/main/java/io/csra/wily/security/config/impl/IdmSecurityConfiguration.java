@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
  * Expects iv-user, iv-groups to come in the header providing both the User/Role for this application
  *
  * @author ndimola
- *
  */
 public class IdmSecurityConfiguration extends SecurityConfiguration {
 

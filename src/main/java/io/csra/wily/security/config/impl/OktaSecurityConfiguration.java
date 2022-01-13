@@ -28,10 +28,10 @@ public class OktaSecurityConfiguration extends CorsSecurityConfiguration {
 
         http.authorizeRequests()
                 .antMatchers(
-                    AntMatchers.PERMITTED_URLS
+                        AntMatchers.PERMITTED_URLS
                 ).permitAll()
                 .antMatchers(
-                    AntMatchers.AUTHENTICATED_URLS
+                        AntMatchers.AUTHENTICATED_URLS
                 ).fullyAuthenticated()
                 .and()
                 .oauth2ResourceServer().jwt();

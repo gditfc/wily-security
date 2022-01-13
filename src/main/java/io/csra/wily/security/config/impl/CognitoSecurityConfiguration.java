@@ -8,9 +8,9 @@ import com.nimbusds.jose.util.DefaultResourceRetriever;
 import com.nimbusds.jose.util.ResourceRetriever;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
-import io.csra.wily.security.filter.impl.CognitoAutoLoginFilter;
 import io.csra.wily.security.config.SecurityConfiguration;
 import io.csra.wily.security.filter.AutoLoginFilter;
+import io.csra.wily.security.filter.impl.CognitoAutoLoginFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +34,8 @@ public class CognitoSecurityConfiguration extends SecurityConfiguration {
         if (this.autoLoginFilter == null) {
             try {
                 this.autoLoginFilter = new CognitoAutoLoginFilter(super.authenticationManagerBean(),
-                                                                    configurableJWTProcessor(),
-                                                                    this.environment);
+                        configurableJWTProcessor(),
+                        this.environment);
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             }
@@ -51,10 +51,10 @@ public class CognitoSecurityConfiguration extends SecurityConfiguration {
                 Integer.parseInt(environment.getRequiredProperty("security.cognito.timeout.read")));
 
         URL jwkSetURL = new URL(String.format(
-                        environment.getRequiredProperty("security.cognito.identity_pool_url") +
+                environment.getRequiredProperty("security.cognito.identity_pool_url") +
                         environment.getRequiredProperty("security.cognito.jwks_suffix"),
-                        environment.getRequiredProperty("security.cognito.region"),
-                        environment.getRequiredProperty("security.cognito.userpool")));
+                environment.getRequiredProperty("security.cognito.region"),
+                environment.getRequiredProperty("security.cognito.userpool")));
 
         JWKSource keySource = new RemoteJWKSet(jwkSetURL, resourceRetriever);
         ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor();

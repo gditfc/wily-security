@@ -15,19 +15,19 @@ import org.slf4j.LoggerFactory;
  */
 public class LtpaSecurityConfiguration extends SecurityConfiguration {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LtpaSecurityConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LtpaSecurityConfiguration.class);
 
-	@Override
-	protected AutoLoginFilter getAutoLoginFilter() {
-		if (this.autoLoginFilter == null) {
-			try {
-				this.autoLoginFilter = new LtpaAutoLoginFilter(super.authenticationManagerBean());
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-		}
+    @Override
+    protected AutoLoginFilter getAutoLoginFilter() {
+        if (this.autoLoginFilter == null) {
+            try {
+                this.autoLoginFilter = new LtpaAutoLoginFilter(super.authenticationManagerBean());
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
 
-		return this.autoLoginFilter;
-	}
+        return this.autoLoginFilter;
+    }
 
 }

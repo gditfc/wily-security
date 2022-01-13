@@ -10,20 +10,20 @@ import java.util.ArrayList;
 
 public class SecurityServiceImpl implements SecurityService {
 
-	public UserDTO getLoggedInUser() {
-		UserDTO user = new UserDTO();
+    public UserDTO getLoggedInUser() {
+        UserDTO user = new UserDTO();
 
-		Authentication principal = SecurityContextHolder.getContext().getAuthentication();
+        Authentication principal = SecurityContextHolder.getContext().getAuthentication();
 
-		if (principal == null) {
-			throw new UnauthorizedException();
-		}
+        if (principal == null) {
+            throw new UnauthorizedException();
+        }
 
-		user.setUserId(principal.getName());
-		user.setRoles(principal.getAuthorities());
-		user.setProviderIds(new ArrayList<>());
+        user.setUserId(principal.getName());
+        user.setRoles(principal.getAuthorities());
+        user.setProviderIds(new ArrayList<>());
 
-		return user;
-	}
+        return user;
+    }
 
 }

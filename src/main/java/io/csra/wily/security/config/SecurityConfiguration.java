@@ -22,77 +22,76 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
  * Spring Security Configuration - ensures that all APIs exposed at /api/* are protected. The spring security filter
  * chain can be modified upon extending this abstract class. This will allow for the introduction of more nuanced
  * authorization.
- * 
+ *
  * @author Nick DiMola
- * 
  */
 public abstract class SecurityConfiguration extends CorsSecurityConfiguration {
 
-	@Autowired
-	private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-	protected AutoLoginFilter autoLoginFilter;
+    protected AutoLoginFilter autoLoginFilter;
 
-	@Bean
-	public MethodInvokingBean methodInvokingFactoryBean() {
-		MethodInvokingBean methodInvokingBean = new MethodInvokingFactoryBean();
-		methodInvokingBean.setTargetClass(SecurityContextHolder.class);
-		methodInvokingBean.setTargetMethod("setStrategyName");
-		methodInvokingBean.setArguments(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
-		return methodInvokingBean;
-	}
+    @Bean
+    public MethodInvokingBean methodInvokingFactoryBean() {
+        MethodInvokingBean methodInvokingBean = new MethodInvokingFactoryBean();
+        methodInvokingBean.setTargetClass(SecurityContextHolder.class);
+        methodInvokingBean.setTargetMethod("setStrategyName");
+        methodInvokingBean.setArguments(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+        return methodInvokingBean;
+    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
 
-		http.authenticationProvider(authenticationProvider()).authorizeRequests()
-				.antMatchers(
-					AntMatchers.PERMITTED_URLS
-				).permitAll()
-				.antMatchers(
-					AntMatchers.AUTHENTICATED_URLS
-				).fullyAuthenticated();
+        http.authenticationProvider(authenticationProvider()).authorizeRequests()
+                .antMatchers(
+                        AntMatchers.PERMITTED_URLS
+                ).permitAll()
+                .antMatchers(
+                        AntMatchers.AUTHENTICATED_URLS
+                ).fullyAuthenticated();
 
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		http.csrf().disable();
+        http.csrf().disable();
 
-		http.cors();
+        http.cors();
 
-		http.addFilterAfter(getAutoLoginFilter(), SecurityContextPersistenceFilter.class);
-		configureFilterChain(http);
-	}
+        http.addFilterAfter(getAutoLoginFilter(), SecurityContextPersistenceFilter.class);
+        configureFilterChain(http);
+    }
 
-	protected void configureFilterChain(HttpSecurity http) {
-		// Add other filters here
-	}
+    protected void configureFilterChain(HttpSecurity http) {
+        // Add other filters here
+    }
 
-	protected String getApiPath() {
-		return "/api/**";
-	}
+    protected String getApiPath() {
+        return "/api/**";
+    }
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider());
-	}
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
 
-	@Bean
-	public AuthenticationProvider authenticationProvider() {
-		UserDetailsByNameServiceWrapper<PreAuthenticatedAuthenticationToken> wrapper = new UserDetailsByNameServiceWrapper<>();
-		wrapper.setUserDetailsService(userDetailsService);
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        UserDetailsByNameServiceWrapper<PreAuthenticatedAuthenticationToken> wrapper = new UserDetailsByNameServiceWrapper<>();
+        wrapper.setUserDetailsService(userDetailsService);
 
-		PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
-		provider.setPreAuthenticatedUserDetailsService(wrapper);
+        PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
+        provider.setPreAuthenticatedUserDetailsService(wrapper);
 
-		return provider;
-	}
+        return provider;
+    }
 
-	@Override
-	@Bean(name = "myAuthenticationManager")
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
-	}
+    @Override
+    @Bean(name = "myAuthenticationManager")
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
-	protected abstract AutoLoginFilter getAutoLoginFilter();
+    protected abstract AutoLoginFilter getAutoLoginFilter();
 
 }
