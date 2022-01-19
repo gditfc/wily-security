@@ -33,7 +33,7 @@
     </scm>
 
     <properties>
-        <wily-exceptions.version>${project.parent.version}</wily-exceptions.version>
+        <wily-exceptions.version>2.6.2</wily-exceptions.version>
     </properties>
 
     <parent>
