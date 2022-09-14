@@ -69,9 +69,9 @@ public class IdmAutoLoginFilter extends AutoLoginFilter {
      * Extracts the role from the bindString which is embedded by the IDM in the header via the doGetRole method, which can
      * be overriden by a sub class.
      *
-     * @param request
-     * @return
-     * @throws PreAuthenticatedCredentialsNotFoundException
+     * @param request - http servlet request
+     * @return - the role from the request
+     * @throws PreAuthenticatedCredentialsNotFoundException - authentication failed error
      */
     private String getRole(HttpServletRequest request) {
         return doGetRole(request);
@@ -87,7 +87,7 @@ public class IdmAutoLoginFilter extends AutoLoginFilter {
         String role = request.getHeader(ROLE_HEADER);
 
         if (StringUtils.isNotBlank(role)) {
-            role = role.replaceAll("[^A-Za-z0-9]", "");
+            role = role.replaceAll("[^A-Za-z\\d]", "");
 
             return ROLE_PREPEND + role.toUpperCase();
         } else {

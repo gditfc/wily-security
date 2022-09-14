@@ -1,6 +1,5 @@
 package io.csra.wily.security.service.impl;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String username) {
-        return new User(username, "", new ArrayList<GrantedAuthority>());
+        return new User(username, "", new ArrayList<>());
     }
 
 }
