@@ -17,63 +17,73 @@ import java.util.Enumeration;
 public abstract class AutoLoginFilter extends AbstractPreAuthenticatedProcessingFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutoLoginFilter.class);
+    private static final String ROW_OF_PLUSES = "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
 
     protected void logRequestDetails(HttpServletRequest request) {
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
         LOGGER.info("++                     Request Details                           ++");
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        LOGGER.info("Method: " + request.getMethod());
-        LOGGER.info("User: " + (request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "No User Principal"));
-        LOGGER.info("Auth Type: " + (request.getAuthType() != null ? request.getAuthType() : "No Auth Type"));
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
+        String method = String.format("Method: %s", request.getMethod());
+        LOGGER.info(method);
+        String user = String.format("User: %s", (request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "No User Principal"));
+        LOGGER.info(user);
+        String authType = String.format("Auth Type: %s", (request.getAuthType() != null ? request.getAuthType() : "No Auth Type"));
+        LOGGER.info(authType);
+        LOGGER.info(ROW_OF_PLUSES);
 
         LOGGER.info("");
 
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
         LOGGER.info("++                         Attributes                            ++");
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
         Enumeration<String> enNames = request.getAttributeNames();
         while (enNames.hasMoreElements()) {
             String param = enNames.nextElement();
-
-            LOGGER.info(param + " - " + request.getAttribute(param));
+            String paramAndAttribute = param + " - " + request.getAttribute(param);
+            LOGGER.info(paramAndAttribute);
         }
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
 
         LOGGER.info("");
 
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
         LOGGER.info("++                          Headers                              ++");
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
 
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             String headerValue = request.getHeader(headerName);
+            String headerNameAndValue = String.format("%s-%s", headerName, headerValue);
 
-            LOGGER.info(headerName + " - " + headerValue);
+            LOGGER.info(headerNameAndValue);
         }
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
 
         LOGGER.info("");
 
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
         LOGGER.info("++                          Cookies                              ++");
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
 
         if (request.getCookies() != null) {
             int i = 1;
             for (Cookie cookie : request.getCookies()) {
-                LOGGER.info("Cookie #" + i);
-                LOGGER.info("Domain: " + cookie.getDomain());
-                LOGGER.info("Name: " + cookie.getName());
-                LOGGER.info("Value: " + cookie.getValue());
-                LOGGER.info("Path: " + cookie.getPath());
+                String cookieNumber = "Cookie #" + i;
+                String cookieDomain = "Domain: " + cookie.getDomain();
+                String cookieName = "Name: " + cookie.getName();
+                String cookieValue = "Value: " + cookie.getValue();
+                String cookiePath = "Path: " + cookie.getPath();
+                LOGGER.info(cookieNumber);
+                LOGGER.info(cookieDomain);
+                LOGGER.info(cookieName);
+                LOGGER.info(cookieValue);
+                LOGGER.info(cookiePath);
                 LOGGER.info("");
                 i++;
             }
         }
 
-        LOGGER.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        LOGGER.info(ROW_OF_PLUSES);
     }
 }
